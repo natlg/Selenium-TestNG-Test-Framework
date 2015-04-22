@@ -12,11 +12,10 @@ import com.nat.test.utils.ConfigReader;
 import com.nat.test.utils.XLSWorker;
 
 public class TestData {
-
-	public static String FIREFOX_PATH = "";
+	private static final ConfigReader configReader = new ConfigReader();
+	public static String FIREFOX_PATH = configReader.getFirefoxPath();
 	public static final String BASE_URL = "https://github.com/";
 	private static WebDriver driver;
-	private static final ConfigReader configReader = new ConfigReader();
 	public static final String LOGIN = configReader.getLogin();
 	public static final String PASSWORD = configReader.getPassword();
 	public static final boolean USE_ASSERT = configReader.isUseAssert();

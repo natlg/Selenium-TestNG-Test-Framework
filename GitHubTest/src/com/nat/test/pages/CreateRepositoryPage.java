@@ -13,7 +13,7 @@ public class CreateRepositoryPage extends Page {
 	private WebElement search;
 
 	@FindBy(id = "repository_name")
-	private WebElement repName;
+	private WebElement repNameElement;
 
 	@FindBy(id = "repository_description")
 	private WebElement repDescription;
@@ -56,6 +56,8 @@ public class CreateRepositoryPage extends Page {
 
 	@FindBy(xpath = "//*[contains(text(), 'Choose another owner')]")
 	private WebElement chooseOwner;
+	
+	private String repName;
 
 	public CreateRepositoryPage(WebDriver driver) {
 		this.driver = driver;
@@ -68,7 +70,7 @@ public class CreateRepositoryPage extends Page {
 	}
 
 	public boolean isNewRepFormExists() {
-		return isElementPresents(repName) && isElementPresents(repDescription)
+		return isElementPresents(repNameElement) && isElementPresents(repDescription)
 				&& isElementPresents(repSubmit) && isElementPresents(owner)
 				&& isElementPresents(publicRep)
 				&& isElementPresents(privateRep) && isElementPresents(autoInit)
@@ -99,8 +101,9 @@ public class CreateRepositoryPage extends Page {
 	public RepositoryPage createRepository(String repName,
 			String repDescription, boolean addReadme, String gitignore,
 			String license) {
-
-		this.repName.sendKeys(repName);
+		// GitHub replaces all spaces to "-" anyway
+		this.repName = repName.trim().replaceAll(" +", "-");
+		this.repNameElement.sendKeys(repName);
 		this.repDescription.sendKeys(repDescription);
 		if (autoInit.isSelected()) {
 			if (!addReadme) {
@@ -130,7 +133,13 @@ public class CreateRepositoryPage extends Page {
 			}
 		}
 		repSubmit.click();
-		return new RepositoryPage(repName, driver);
+		RepositoryPage repPage = new RepositoryPage(repName, driver);
+		repPage.setRepName(repName);
+		return repPage;
+	}
+	
+	public String getRepositoryName() {
+		return repName;
 	}
 
 }

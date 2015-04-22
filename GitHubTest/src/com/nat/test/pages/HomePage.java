@@ -87,4 +87,5 @@ public class HomePage extends Page {
 		notificationsIcon.click();
 		return PageFactory.initElements(driver, NotificationsPage.class);
 	}
+	
 }

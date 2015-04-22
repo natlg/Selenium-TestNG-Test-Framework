@@ -18,13 +18,12 @@ public abstract class Page {
 		} catch (NoSuchElementException e) {
 			return false;
 		}
-
 	}
 
-	public StartPage logout() {
+	public Page logout() {
 		if (isElementPresents(logout)) {
 			logout.click();
-			return PageFactory.initElements(driver, StartPage.class);
+			return this;
 		}
 		return null;
 	}

@@ -6,10 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -18,6 +16,7 @@ import com.nat.test.pages.LoginPage;
 import com.nat.test.pages.NotificationsPage;
 import com.nat.test.pages.SearchPage;
 import com.nat.test.pages.StartPage;
+import com.nat.test.utils.PageNavigator;
 
 public class LoginTest {
 	private WebDriver driver;
@@ -27,13 +26,13 @@ public class LoginTest {
 	private boolean passed = true;
 	private LoginPage loginPage;
 	private NotificationsPage notificationsPage;
-	
+	private PageNavigator pageNavigator = new PageNavigator();
 
 	@BeforeClass
 	public void beforeClass() {
 		driver = TestData.getDriver();
+
 	}
-	
 
 	@BeforeMethod
 	public void beforeTest() {
@@ -43,12 +42,6 @@ public class LoginTest {
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
-	}
-
-	public void login() {
-		LoginPage loginPage = getLoginPage();
-		homePage = loginPage.loginAs(TestData.LOGIN, TestData.PASSWORD);
-
 	}
 
 	/**
@@ -66,7 +59,8 @@ public class LoginTest {
 	public void testLogin() {
 
 		// 1 step
-		loginPage = getLoginPage();
+		loginPage = pageNavigator.getLoginPage(driver);
+		// getLoginPage();
 		if (null == loginPage) {
 			passed = false;
 		}
@@ -88,7 +82,7 @@ public class LoginTest {
 		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_4, passed);
 
 		// 5 step
-		startPage = homePage.logout();
+		startPage = pageNavigator.logout(driver, homePage);
 		passed = startPage.isLoginPresents();
 		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_5, passed);
 
@@ -105,7 +99,8 @@ public class LoginTest {
 	public void testNotifications() {
 
 		// 1 step
-		login();
+		homePage = pageNavigator.login(driver);
+		// login();
 		TestData.saveTestResult(TestData.TEST_NOTIFICATIONS, TestData.STEP_1,
 				homePage.isNotificationsIconPresents());
 
@@ -165,16 +160,5 @@ public class LoginTest {
 	 * @return the page with form to log in, null if it's not possible to get
 	 *         the login page
 	 */
-	private LoginPage getLoginPage() {
-		LoginPage loginPage = null;
-		driver.get(TestData.BASE_URL);
-		try {
-			startPage = PageFactory.initElements(driver, StartPage.class);
-			loginPage = startPage.navigateToLogin();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return loginPage;
-	}
 
 }

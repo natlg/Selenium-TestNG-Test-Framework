@@ -10,7 +10,7 @@ import com.nat.test.TestData;
 public class RepositoryPage extends Page {
 	
 		@FindBy(xpath = "//a[contains(@class, 'current-repository')]")
-		private WebElement repName;
+		private WebElement repNameElement;
 		
 		@FindBy(xpath = "//*[text()='Code']")
 		private WebElement code;
@@ -30,8 +30,10 @@ public class RepositoryPage extends Page {
 		@FindBy(xpath = "//*[text()='Graphs']")
 		private WebElement graphs;
 		
-		@FindBy(xpath = "//*[text()='Settings']")
+		@FindBy(xpath = "//a[contains (@data-selected-links, 'repo_settings')]")
 		private WebElement settings;
+		
+		private String repName;
 	
 	public RepositoryPage(String repoName, WebDriver driver) {
 		this.driver = driver;
@@ -43,7 +45,7 @@ public class RepositoryPage extends Page {
 	}
 
 	public boolean areSectionsPresent() {
-		return isElementPresents(repName) && isElementPresents(code)
+		return isElementPresents(repNameElement) && isElementPresents(code)
 				&& isElementPresents(issues)
 				&& isElementPresents(pullRequests)
 				&& isElementPresents(wiki)
@@ -53,13 +55,16 @@ public class RepositoryPage extends Page {
 	}
 
 	public OptionsPage goToSettings() {
+		System.out.println("RepositoryPage. go to settings ");
 		settings.click();
 		return PageFactory.initElements(driver, OptionsPage.class);
 	}
 
 	public String getRepositoryName() {
-		// TODO Auto-generated method stub
-		return repName.getText();
+		return repName;
 	}
 
+	public void setRepName(String repName) {
+		this.repName = repName;
+	}
 }

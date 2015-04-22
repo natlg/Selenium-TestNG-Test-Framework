@@ -20,6 +20,7 @@ import com.nat.test.pages.LoginPage;
 import com.nat.test.pages.OptionsPage;
 import com.nat.test.pages.RepositoryPage;
 import com.nat.test.pages.StartPage;
+import com.nat.test.utils.PageNavigator;
 
 public class RepositoryTest {
 
@@ -32,17 +33,19 @@ public class RepositoryTest {
 	private String gitignore = "Java";
 	private String license = "MIT";
 	private RepositoryPage repositoryPage;
+	private PageNavigator pageNavigator = new PageNavigator();
+	private OptionsPage optionsPage;
 
 	@BeforeClass
 	public void beforeClass() {
 		driver = TestData.getDriver();
 	}
-	
+
 	@BeforeMethod
 	public void beforeTest() {
-		homePage = getHomePage();
+		// homePage = pageNavigator.getHomePage(driver);
 	}
-	
+
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
@@ -51,28 +54,29 @@ public class RepositoryTest {
 	/**
 	 * Tests correct repository creating.
 	 * <p>
-	 * 1. Check that button to create repository presents and click it <br>
+	 * 1. Log in, check that button to create repository presents and click it <br>
 	 * 2. Check that form for creating repository is presented and options to
 	 * choose owner, gitignore and license works correct <br>
 	 * 3. Fill form with correct data and submit <br>
 	 * 4. Check that name of the just created repository is the same as from
 	 * creating and check that code, issues, pullRequests, wiki, pulse, graphs
-	 * ans settings sections are presented <br>
+	 * and settings sections are presented <br>
 	 * 5. Delete this repository
 	 */
-	@Test
+	@Test(enabled = true)
 	public void testRepositoryCreating() {
+		homePage = pageNavigator.getHomePage(driver);
 		Assert.assertTrue(homePage.isNewRepoButtonPresents());
 		createRepositoryPage = homePage.createNewRepository();
 		Assert.assertTrue(createRepositoryPage.isNewRepFormExists());
 		Assert.assertTrue(createRepositoryPage.isNewRepFormJSWorks());
-		String repName = getUniqueRepName();
+		String repName = pageNavigator.getUniqueRepName();
 		repositoryPage = createRepositoryPage.createRepository(repName,
 				repDescription, addReadme, gitignore, license);
 		Assert.assertEquals(repositoryPage.getRepositoryName(), repName);
 		Assert.assertTrue(repositoryPage.areSectionsPresent());
-
-		repositoryPage.goToSettings().deleteRepository(repName);
+		optionsPage = repositoryPage.goToSettings();
+		homePage = optionsPage.deleteRepository(repName);
 		repositoryPage.logout();
 	}
 
@@ -86,71 +90,15 @@ public class RepositoryTest {
 	 * name of deleted repository is not presented in the list of existing
 	 * repositories
 	 */
-	@Test
+	@Test(enabled = true)
 	public void testRepositoryDeleting() {
-		repositoryPage = getNewRepositoryPage();
+		repositoryPage = pageNavigator.getNewRepositoryPage(driver,
+				repDescription, addReadme, gitignore, license);
+		currentRepName = repositoryPage.getRepositoryName();
 		OptionsPage optionsPage = repositoryPage.goToSettings();
 		Assert.assertTrue(optionsPage.isDeletePresents());
 		homePage = optionsPage.deleteRepository(currentRepName);
 		Assert.assertTrue(homePage.isRepositoryJustDeleted(currentRepName));
 		homePage.logout();
-
 	}
-
-	/**
-	 * The method to get the Repository page from any page. Returns null if it's
-	 * not possible to get the Repository page
-	 *
-	 * @return Repository page
-	 */
-	public RepositoryPage getNewRepositoryPage() {
-		try {
-			createRepositoryPage = homePage.createNewRepository();
-			currentRepName = getUniqueRepName();
-			repositoryPage = createRepositoryPage.createRepository(
-					currentRepName, repDescription, addReadme, gitignore,
-					license);
-
-		} catch (IllegalStateException e) {
-
-			driver.get(TestData.BASE_URL);
-			getHomePage();
-			getNewRepositoryPage();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return repositoryPage;
-	}
-
-	/**
-	 * The method to get the unique name for new repository
-	 *
-	 * @return unique name
-	 */
-	public String getUniqueRepName() {
-		return "NewRepository" + System.currentTimeMillis();
-	}
-
-	/**
-	 * The method to get the Home page from any page. Returns null if it's not
-	 * possible to get the Home page
-	 *
-	 * @return Home page
-	 */
-	private HomePage getHomePage() {
-		homePage = null;
-		try {
-			driver.get(TestData.BASE_URL);
-			StartPage startPage = PageFactory.initElements(driver,
-					StartPage.class);
-			LoginPage loginPage = startPage.navigateToLogin();
-			homePage = loginPage.loginAs(TestData.LOGIN, TestData.PASSWORD);
-		}
-
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		return homePage;
-	}
-
 }

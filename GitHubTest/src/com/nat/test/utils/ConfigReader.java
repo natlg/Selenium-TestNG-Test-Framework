@@ -16,8 +16,8 @@ public class ConfigReader {
 		try {
 			fis = new FileInputStream("data/config.properties");
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("Cant't read config.properties file!");
 			return;
 
 		}
