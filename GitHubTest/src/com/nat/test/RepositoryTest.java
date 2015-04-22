@@ -56,7 +56,7 @@ public class RepositoryTest {
 	 * <p>
 	 * 1. Log in, check that button to create repository presents and click it <br>
 	 * 2. Check that form for creating repository is presented and options to
-	 * choose owner, gitignore and license works correct <br>
+	 * choose owner, gitignore and license work correct <br>
 	 * 3. Fill form with correct data and submit <br>
 	 * 4. Check that name of the just created repository is the same as from
 	 * creating and check that code, issues, pullRequests, wiki, pulse, graphs
@@ -65,16 +65,25 @@ public class RepositoryTest {
 	 */
 	@Test(enabled = true)
 	public void testRepositoryCreating() {
-		homePage = pageNavigator.getHomePage(driver);
+		// 1 step
+		homePage = pageNavigator.login(driver);
 		Assert.assertTrue(homePage.isNewRepoButtonPresents());
 		createRepositoryPage = homePage.createNewRepository();
+
+		// 2 step
 		Assert.assertTrue(createRepositoryPage.isNewRepFormExists());
 		Assert.assertTrue(createRepositoryPage.isNewRepFormJSWorks());
+
+		// 3 step
 		String repName = pageNavigator.getUniqueRepName();
 		repositoryPage = createRepositoryPage.createRepository(repName,
 				repDescription, addReadme, gitignore, license);
+
+		// 4 step
 		Assert.assertEquals(repositoryPage.getRepositoryName(), repName);
 		Assert.assertTrue(repositoryPage.areSectionsPresent());
+
+		// 5 step
 		optionsPage = repositoryPage.goToSettings();
 		homePage = optionsPage.deleteRepository(repName);
 		repositoryPage.logout();
@@ -85,18 +94,22 @@ public class RepositoryTest {
 	 * <p>
 	 * 1. Create new repository, go to settings <br>
 	 * 2. Check that option to delete exists <br>
-	 * 3. Delete repository <br>
-	 * 4. Check that message about successful deleting appeared and check that
-	 * name of deleted repository is not presented in the list of existing
-	 * repositories
+	 * 3. Delete repository, check that message about successful deleting
+	 * appeared and check that name of deleted repository is not presented in
+	 * the list of existing repositories
 	 */
 	@Test(enabled = true)
 	public void testRepositoryDeleting() {
+		// 1 step
 		repositoryPage = pageNavigator.getNewRepositoryPage(driver,
 				repDescription, addReadme, gitignore, license);
 		currentRepName = repositoryPage.getRepositoryName();
 		OptionsPage optionsPage = repositoryPage.goToSettings();
+
+		// 2 step
 		Assert.assertTrue(optionsPage.isDeletePresents());
+
+		// 3 step
 		homePage = optionsPage.deleteRepository(currentRepName);
 		Assert.assertTrue(homePage.isRepositoryJustDeleted(currentRepName));
 		homePage.logout();

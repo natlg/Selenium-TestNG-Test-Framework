@@ -11,15 +11,26 @@ import com.nat.test.pages.Page;
 import com.nat.test.pages.RepositoryPage;
 import com.nat.test.pages.StartPage;
 
+/**
+ * Class for navigation on the site
+ */
 public class PageNavigator {
 
-	private Page page;
 	private StartPage startPage;
 	private LoginPage loginPage;
 	private HomePage homePage;
 	private CreateRepositoryPage createRepositoryPage;
 	private RepositoryPage repositoryPage;
 
+	/**
+	 * Navigate to the page with the login form. Need to sign out before
+	 * calling. Returns null if it's not possible to get the Login page
+	 *
+	 * @param driver
+	 *            The driver that will be used for navigation
+	 * @return An instance of {@link LoginPage} class or null if it's not
+	 *         possible to get the Login page
+	 */
 	public LoginPage getLoginPage(WebDriver driver) {
 		loginPage = null;
 		driver.get(TestData.BASE_URL);
@@ -28,29 +39,60 @@ public class PageNavigator {
 			loginPage = startPage.navigateToLogin();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Can't get Login page");
+			System.out.println("Can't get the Login page");
 		}
 		return loginPage;
 	}
 
+	/**
+	 * Login with correct data (takes username and password from the
+	 * config.properties file) and navigate to the Home page. Need to sign out
+	 * before calling. Returns null if it's not possible to login or get the
+	 * Home page
+	 *
+	 * @param driver
+	 *            The driver that will be used for navigation
+	 * @return An instance of {@link HomePage} class or null if it's not
+	 *         possible to login or get the Home page
+	 */
 	public HomePage login(WebDriver driver) {
-		LoginPage loginPage = getLoginPage(driver);
-		homePage = loginPage.loginAs(TestData.LOGIN, TestData.PASSWORD);
+		homePage = null;
+		try {
+			LoginPage loginPage = getLoginPage(driver);
+			homePage = loginPage.loginAs(TestData.LOGIN, TestData.PASSWORD);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Can't get the Home page");
+		}
 		return homePage;
 	}
 
 	/**
-	 * The method to get the Repository page from any page. Returns null if it's
-	 * not possible to get the Repository page
+	 * Method to get the page with just created repository. Need to sign out
+	 * before calling. Returns null if it's not possible to get the Repository
+	 * page
+	 * 
+	 * @param driver
+	 *            The driver that will be used for navigation
+	 * @param repDescription
+	 *            Repository description
+	 * @param addReadme
+	 *            If true, initialize repository with a README
+	 * @param gitignore
+	 *            Select gitignore from the dropdown
+	 * @param license
+	 *            Select license type from the dropdown
 	 *
-	 * @return Repository page
+	 * @return An instance of {@link RepositoryPage} class or null if it's not
+	 *         possible to login or get the Repository page
 	 */
 	public RepositoryPage getNewRepositoryPage(WebDriver driver,
 			String repDescription, boolean addReadme, String gitignore,
 			String license) {
+		repositoryPage = null;
 		try {
 			driver.get(TestData.BASE_URL);
-			homePage = getHomePage(driver);
+			homePage = login(driver);
 			createRepositoryPage = homePage.createNewRepository();
 			String currentRepName = getUniqueRepName();
 			repositoryPage = createRepositoryPage.createRepository(
@@ -59,7 +101,7 @@ public class PageNavigator {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Can't get NewRepositoryPage");
+			System.out.println("Can't get RepositoryPage");
 		}
 		return repositoryPage;
 	}
@@ -74,37 +116,25 @@ public class PageNavigator {
 	}
 
 	/**
-	 * The method to get the Home page from any page. Returns null if it's not
-	 * possible to get the Home page
+	 * Method to log out and get Start page from any page. Ren null if it's not
+	 * possible to log out or get the Start page
 	 *
-	 * @return Home page
+	 * @param driver
+	 *            The driver that will be used for navigation
+	 * @param page
+	 *            Current page
+	 * @return An instance of {@link StartPage} class or null if it's not
+	 *         possible to log out or get the Start page
 	 */
-	public HomePage getHomePage(WebDriver driver) {
-		homePage = null;
-		try {
-			driver.get(TestData.BASE_URL);
-			StartPage startPage = PageFactory.initElements(driver,
-					StartPage.class);
-			LoginPage loginPage = startPage.navigateToLogin();
-			homePage = loginPage.loginAs(TestData.LOGIN, TestData.PASSWORD);
-		}
-
-		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Can't get HomePage");
-		}
-		return homePage;
-	}
-
 	public StartPage logout(WebDriver driver, Page page) {
-		page.logout();
-		driver.get(TestData.BASE_URL);
 		try {
+			page.logout();
+			driver.get(TestData.BASE_URL);
 			startPage = PageFactory.initElements(driver, StartPage.class);
 			return startPage;
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Can't get StartPage");
+			System.out.println("Can't get Start page");
 			return null;
 		}
 

@@ -85,7 +85,6 @@ public class LoginTest {
 		startPage = pageNavigator.logout(driver, homePage);
 		passed = startPage.isLoginPresents();
 		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_5, passed);
-
 	}
 
 	/**
@@ -152,13 +151,5 @@ public class LoginTest {
 	public Object[][] createQuery() {
 		return TestData.getSearchData("testSearch");
 	}
-
-	/**
-	 * The method to get the login page from any page. Returns null if it's not
-	 * possible to get the login page
-	 *
-	 * @return the page with form to log in, null if it's not possible to get
-	 *         the login page
-	 */
-
+	
 }

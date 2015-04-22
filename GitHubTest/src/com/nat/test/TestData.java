@@ -8,6 +8,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.testng.Assert;
 
+import com.nat.test.pages.LoginPage;
 import com.nat.test.utils.ConfigReader;
 import com.nat.test.utils.XLSWorker;
 
@@ -36,6 +37,16 @@ public class TestData {
 	private final static String xlsPath = "xls\\TestCases.xlsx";
 	private static XLSWorker xlsWorker = new XLSWorker(xlsPath);
 
+	/**
+	 * Saves test results to the excel file (passed or fail)
+	 *
+	 * @param testCase
+	 *            Test case
+	 * @param step
+	 *            Step of the test case
+	 * @param passed
+	 *            Test result
+	 */
 	public static void saveTestResult(int testCase, int step, boolean passed) {
 		System.out.println("use assert: " + USE_ASSERT);
 		if (USE_ASSERT) {
@@ -45,23 +56,22 @@ public class TestData {
 		case TestData.TEST_LOGIN:
 			xlsWorker.setCellData(TestData.SHEET_NAME, "Result", step + 1,
 					passed ? "Passed" : "Fail");
-			System.out.println ("save login");
 			break;
 		case TestData.TEST_SEARCH:
 			xlsWorker.setCellData(TestData.SHEET_NAME, "Result", step + 6,
 					passed ? "Passed" : "Fail");
-			System.out.println ("save search" + passed);
 			break;
 		case TestData.TEST_NOTIFICATIONS:
 			xlsWorker.setCellData(TestData.SHEET_NAME, "Result", step + 8,
 					passed ? "Passed" : "Fail");
-			System.out.println ("save notif" + passed);
 			break;
 		case TestData.TEST_REPOSITORY_CREATING:
-
+			xlsWorker.setCellData(TestData.SHEET_NAME, "Result", step + 10,
+					passed ? "Passed" : "Fail");
 			break;
 		case TestData.TEST_REPOSITORY_DELETING:
-
+			xlsWorker.setCellData(TestData.SHEET_NAME, "Result", step + 15,
+					passed ? "Passed" : "Fail");
 			break;
 
 		default:
@@ -69,11 +79,20 @@ public class TestData {
 		}
 	}
 
+	/**
+	 * Method to get the data for dataProvider from the file
+	 * 
+	 ** @param testCase
+	 *            Test case
+	 *
+	 * @return array of data
+	 */
 	public static Object[][] getSearchData(String testCase) {
 		try {
 			return xlsWorker.getDataForTest(testCase);
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("Can't read the test data");
 			return null;
 		}
 
@@ -88,6 +107,13 @@ public class TestData {
 	// System.out.println("FIREFOX_PATH = " + p.getProperty("FIREFOX_PATH"));
 	// }
 
+	/**
+	 * Method to get the driver. WebDriver type is determined in
+	 * config.properties. By the default returns an instance of
+	 * {@link FirefoxDriver}
+	 *
+	 * @return driver
+	 */
 	public static synchronized WebDriver getDriver() {
 		if (null == driver) {
 			if (!FIREFOX_PATH.equals("")) {

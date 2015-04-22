@@ -6,8 +6,8 @@
       <class name="com.nat.test.RepositoryTest">
         <methods>
           <include name="beforeClass"/>
+          <include name="testRepositoryCreating"/>
           <include name="afterClass"/>
-          <include name="testRepositoryDeleting"/>
           <include name="beforeTest"/>
         </methods>
       </class> <!-- com.nat.test.RepositoryTest -->
