@@ -9,6 +9,7 @@ import com.nat.test.pages.HomePage;
 import com.nat.test.pages.LoginPage;
 import com.nat.test.pages.Page;
 import com.nat.test.pages.RepositoryPage;
+import com.nat.test.pages.SearchPage;
 import com.nat.test.pages.StartPage;
 
 /**
@@ -138,6 +139,22 @@ public class PageNavigator {
 			return null;
 		}
 
+	}
+
+	/**
+	 * Method to search
+	 *
+	 * @param driver
+	 *            The driver that will be used for navigation
+	 * @param query
+	 *            Search query
+	 * @param page
+	 *            Current page
+	 * @return An instance of {@link SearchPage} class with search result
+	 */
+	public SearchPage search(WebDriver driver, String query, Page page) {
+		page.search(query);
+		return PageFactory.initElements(driver, SearchPage.class);
 	}
 
 }

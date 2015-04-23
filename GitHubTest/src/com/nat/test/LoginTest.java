@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 import com.nat.test.pages.HomePage;
 import com.nat.test.pages.LoginPage;
 import com.nat.test.pages.NotificationsPage;
+import com.nat.test.pages.Page;
 import com.nat.test.pages.SearchPage;
 import com.nat.test.pages.StartPage;
 import com.nat.test.utils.PageNavigator;
@@ -126,7 +127,8 @@ public class LoginTest {
 		TestData.saveTestResult(TestData.TEST_SEARCH, TestData.STEP_1, passed);
 
 		// 2 step
-		searchPage = startPage.search(searchQuery);
+		searchPage = pageNavigator.search(driver, searchQuery, startPage);
+		// startPage.search(searchQuery);
 		boolean hasResult = Boolean.parseBoolean(hasResultStr);
 		if (hasResult) {
 			List<WebElement> searchResults = searchPage.getSearchResults();
@@ -151,5 +153,5 @@ public class LoginTest {
 	public Object[][] createQuery() {
 		return TestData.getSearchData("testSearch");
 	}
-	
+
 }

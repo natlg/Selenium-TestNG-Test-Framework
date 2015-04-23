@@ -12,6 +12,9 @@ import com.nat.test.pages.LoginPage;
 import com.nat.test.utils.ConfigReader;
 import com.nat.test.utils.XLSWorker;
 
+/**
+ * Class provides data and settings for tests and saves test results
+ */
 public class TestData {
 	private static final ConfigReader configReader = new ConfigReader();
 	public static String FIREFOX_PATH = configReader.getFirefoxPath();
@@ -48,7 +51,6 @@ public class TestData {
 	 *            Test result
 	 */
 	public static void saveTestResult(int testCase, int step, boolean passed) {
-		System.out.println("use assert: " + USE_ASSERT);
 		if (USE_ASSERT) {
 			Assert.assertTrue(passed);
 		}

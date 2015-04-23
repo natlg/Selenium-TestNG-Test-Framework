@@ -1,5 +1,6 @@
 package com.nat.test.pages;
 
+import java.io.File;
 import java.util.List;
 
 import org.openqa.selenium.WebDriver;
@@ -7,6 +8,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+/**
+ * Class represents page with the form for creating new repository
+ */
 public class CreateRepositoryPage extends Page {
 
 	@FindBy(name = "q")
@@ -56,9 +60,17 @@ public class CreateRepositoryPage extends Page {
 
 	@FindBy(xpath = "//*[contains(text(), 'Choose another owner')]")
 	private WebElement chooseOwner;
-	
+
 	private String repName;
 
+	/**
+	 * Class constructor
+	 * 
+	 * @param driver
+	 *            The driver that will be used for navigation
+	 * @throws IllegalStateException
+	 *             If it's not expected page
+	 */
 	public CreateRepositoryPage(WebDriver driver) {
 		this.driver = driver;
 		// Check that we're on the right page.
@@ -69,8 +81,14 @@ public class CreateRepositoryPage extends Page {
 		}
 	}
 
+	/**
+	 * Checks if the form for creating new repository presents on the page
+	 *
+	 * @return true if all form elements present on the page
+	 */
 	public boolean isNewRepFormExists() {
-		return isElementPresents(repNameElement) && isElementPresents(repDescription)
+		return isElementPresents(repNameElement)
+				&& isElementPresents(repDescription)
 				&& isElementPresents(repSubmit) && isElementPresents(owner)
 				&& isElementPresents(publicRep)
 				&& isElementPresents(privateRep) && isElementPresents(autoInit)
@@ -78,11 +96,23 @@ public class CreateRepositoryPage extends Page {
 				&& isElementPresents(addLicense);
 	}
 
+	/**
+	 * Log out
+	 *
+	 * @return An instance of {@link StartPage} class
+	 */
 	public StartPage logout() {
 		logout.click();
 		return PageFactory.initElements(driver, StartPage.class);
 	}
 
+	/**
+	 * Check if dropdowns to choose owner, gitignore and license appear if click
+	 * it's elements
+	 *
+	 * @return True if dropdowns to choose owner, gitignore and license appear
+	 *         if click it's elements
+	 */
 	public boolean isNewRepFormJSWorks() {
 		owner.click();
 		boolean isChooseOwnerPresents = isElementPresents(chooseOwner);
@@ -93,11 +123,26 @@ public class CreateRepositoryPage extends Page {
 		addLicense.click();
 		boolean isLicensePresents = isElementPresents(chooseLicense);
 		System.out.println(isLicensePresents + "");
-
 		return isChooseOwnerPresents && isGitignorePresents
 				&& isLicensePresents;
 	}
 
+	/**
+	 * Method to get the page with just created repository.
+	 * 
+	 * @param repName
+	 *            New repository name
+	 * @param repDescription
+	 *            Repository description
+	 * @param addReadme
+	 *            If true, initialize repository with a README
+	 * @param gitignore
+	 *            Select gitignore from the dropdown
+	 * @param license
+	 *            Select license type from the dropdown
+	 *
+	 * @return An instance of {@link RepositoryPage} class
+	 */
 	public RepositoryPage createRepository(String repName,
 			String repDescription, boolean addReadme, String gitignore,
 			String license) {
@@ -114,7 +159,6 @@ public class CreateRepositoryPage extends Page {
 				autoInit.click();
 			}
 		}
-
 		if (null != gitignore) {
 			addGitignore.click();
 			for (WebElement element : gitignoreList) {
@@ -123,7 +167,6 @@ public class CreateRepositoryPage extends Page {
 				}
 			}
 		}
-
 		if (null != license) {
 			addLicense.click();
 			for (WebElement element : licenseList) {
@@ -137,9 +180,13 @@ public class CreateRepositoryPage extends Page {
 		repPage.setRepName(repName);
 		return repPage;
 	}
-	
+
+	/**
+	 * The method to get the repository name
+	 *
+	 * @return repName
+	 */
 	public String getRepositoryName() {
 		return repName;
 	}
-
 }

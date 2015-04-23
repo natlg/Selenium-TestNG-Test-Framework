@@ -67,25 +67,32 @@ public class RepositoryTest {
 	public void testRepositoryCreating() {
 		// 1 step
 		homePage = pageNavigator.login(driver);
-		Assert.assertTrue(homePage.isNewRepoButtonPresents());
+		TestData.saveTestResult(TestData.TEST_REPOSITORY_CREATING, TestData.STEP_1,
+				homePage.isNewRepoButtonPresents());
 		createRepositoryPage = homePage.createNewRepository();
 
 		// 2 step
-		Assert.assertTrue(createRepositoryPage.isNewRepFormExists());
-		Assert.assertTrue(createRepositoryPage.isNewRepFormJSWorks());
+		TestData.saveTestResult(TestData.TEST_REPOSITORY_CREATING, TestData.STEP_2,
+				createRepositoryPage.isNewRepFormExists()
+						&& createRepositoryPage.isNewRepFormJSWorks());
 
 		// 3 step
 		String repName = pageNavigator.getUniqueRepName();
 		repositoryPage = createRepositoryPage.createRepository(repName,
 				repDescription, addReadme, gitignore, license);
+		TestData.saveTestResult(TestData.TEST_REPOSITORY_CREATING, TestData.STEP_3,
+				null != repositoryPage);
 
 		// 4 step
-		Assert.assertEquals(repositoryPage.getRepositoryName(), repName);
-		Assert.assertTrue(repositoryPage.areSectionsPresent());
+		TestData.saveTestResult(TestData.TEST_REPOSITORY_CREATING, TestData.STEP_4,
+				repositoryPage.getRepositoryName().equals(repName)
+						&& repositoryPage.areSectionsPresent());
 
 		// 5 step
 		optionsPage = repositoryPage.goToSettings();
 		homePage = optionsPage.deleteRepository(repName);
+		TestData.saveTestResult(TestData.TEST_REPOSITORY_CREATING, TestData.STEP_5,
+				null != homePage);
 		repositoryPage.logout();
 	}
 
@@ -105,13 +112,17 @@ public class RepositoryTest {
 				repDescription, addReadme, gitignore, license);
 		currentRepName = repositoryPage.getRepositoryName();
 		OptionsPage optionsPage = repositoryPage.goToSettings();
+		TestData.saveTestResult(TestData.TEST_REPOSITORY_DELETING, TestData.STEP_1,
+				null != optionsPage);
 
 		// 2 step
-		Assert.assertTrue(optionsPage.isDeletePresents());
+		TestData.saveTestResult(TestData.TEST_REPOSITORY_DELETING, TestData.STEP_2,
+				optionsPage.isDeletePresents());
 
 		// 3 step
 		homePage = optionsPage.deleteRepository(currentRepName);
-		Assert.assertTrue(homePage.isRepositoryJustDeleted(currentRepName));
+		TestData.saveTestResult(TestData.TEST_REPOSITORY_DELETING, TestData.STEP_3,
+				homePage.isRepositoryJustDeleted(currentRepName));
 		homePage.logout();
 	}
 }
