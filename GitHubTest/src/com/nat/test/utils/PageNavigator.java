@@ -1,6 +1,8 @@
 package com.nat.test.utils;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 
 import com.nat.test.TestData;
@@ -156,5 +158,19 @@ public class PageNavigator {
 		page.search(query);
 		return PageFactory.initElements(driver, SearchPage.class);
 	}
-
+	
+	/**
+	 * Method to perform click using {@link Actions} class. Call if simple click 
+	 * doesn't work for {@link ChromeDriver} 
+	 *
+	 * @param driver
+	 *            The driver that will be used for navigation
+	 * @param element
+	 *            Element to click
+	 */
+	public static void actionClick (WebDriver driver , WebElement element) {
+		Actions action = new Actions(driver);
+		action.moveToElement(element).perform();
+		action.click().perform();
+	}
 }

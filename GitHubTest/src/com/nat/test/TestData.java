@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.testng.Assert;
 
-import com.nat.test.pages.LoginPage;
 import com.nat.test.utils.ConfigReader;
 import com.nat.test.utils.XLSWorker;
 
@@ -17,6 +17,7 @@ import com.nat.test.utils.XLSWorker;
  */
 public class TestData {
 	private static final ConfigReader configReader = new ConfigReader();
+	public static String BROWSER = configReader.getBrowser();
 	public static String FIREFOX_PATH = configReader.getFirefoxPath();
 	public static final String BASE_URL = "https://github.com/";
 	private static WebDriver driver;
@@ -119,26 +120,35 @@ public class TestData {
 	 */
 	public static synchronized WebDriver getDriver() {
 		if (null == driver) {
-			if (!FIREFOX_PATH.equals("")) {
-				try {
-					File pathToProfile = new File(FIREFOX_PATH);
-					FirefoxProfile profile = new FirefoxProfile(pathToProfile);
-					driver = new FirefoxDriver(profile);
-				} catch (Exception e) {
-					e.printStackTrace();
+			switch (BROWSER) {
+			case "FIREFOX":
+				if (!FIREFOX_PATH.equals("")) {
+					try {
+						File pathToProfile = new File(FIREFOX_PATH);
+						FirefoxProfile profile = new FirefoxProfile(
+								pathToProfile);
+						driver = new FirefoxDriver(profile);
+					} catch (Exception e) {
+						e.printStackTrace();
+						driver = new FirefoxDriver();
+					}
+				} else {
 					driver = new FirefoxDriver();
 				}
-			} else {
-				driver = new FirefoxDriver();
+				break;
+			case "CHROME":
+				String chromepath = "libs\\chromedriver.exe";
+				System.setProperty("webdriver.chrome.driver", chromepath);
+				driver = new ChromeDriver();
+				driver.manage().window().maximize();
+				break;
 
-				// File file = new
-				// File("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe");
-				// System.setProperty("webdriver.chrome.driver",
-				// file.getAbsolutePath());
-				// driver = new ChromeDriver();
+			default:
+				driver = new FirefoxDriver();
+				break;
 			}
 			driver.manage().timeouts()
-					.implicitlyWait(TestData.WAIT_TIME, TimeUnit.SECONDS);
+			.implicitlyWait(WAIT_TIME, TimeUnit.SECONDS);
 		}
 		return driver;
 	}

@@ -1,12 +1,14 @@
 package com.nat.test.pages;
 
-import java.io.File;
 import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import com.nat.test.utils.PageNavigator;
 
 /**
  * Class represents page with the form for creating new repository
@@ -114,15 +116,33 @@ public class CreateRepositoryPage extends Page {
 	 *         if click it's elements
 	 */
 	public boolean isNewRepFormJSWorks() {
-		owner.click();
-		boolean isChooseOwnerPresents = isElementPresents(chooseOwner);
-		System.out.println(isChooseOwnerPresents + "");
-		addGitignore.click();
-		boolean isGitignorePresents = isElementPresents(chooseGitignore);
-		System.out.println(isGitignorePresents + "");
-		addLicense.click();
-		boolean isLicensePresents = isElementPresents(chooseLicense);
-		System.out.println(isLicensePresents + "");
+		boolean isChooseOwnerPresents;
+		boolean isGitignorePresents;
+		boolean isLicensePresents;
+		try {
+			owner.click();
+			isChooseOwnerPresents = isElementPresents(chooseOwner);
+
+			addGitignore.click();
+			isGitignorePresents = isElementPresents(chooseGitignore);
+
+			addLicense.click();
+			isLicensePresents = isElementPresents(chooseLicense);
+
+		} catch (org.openqa.selenium.WebDriverException e) {
+			// simple click works for FirefoxDriver but not for ChromeDriver
+			PageNavigator.actionClick(driver, owner);
+			owner.click();
+			isChooseOwnerPresents = isElementPresents(chooseOwner);
+			
+			PageNavigator.actionClick(driver, addGitignore);
+			addGitignore.click();
+			isGitignorePresents = isElementPresents(chooseGitignore);
+
+			PageNavigator.actionClick(driver, addLicense);
+			addLicense.click();
+			isLicensePresents = isElementPresents(chooseLicense);
+		}
 		return isChooseOwnerPresents && isGitignorePresents
 				&& isLicensePresents;
 	}
@@ -152,15 +172,28 @@ public class CreateRepositoryPage extends Page {
 		this.repDescription.sendKeys(repDescription);
 		if (autoInit.isSelected()) {
 			if (!addReadme) {
-				autoInit.click();
+				try {
+					autoInit.click();
+				} catch (org.openqa.selenium.WebDriverException e) {
+					PageNavigator.actionClick(driver, autoInit);
+				}
+				
 			}
 		} else {
 			if (addReadme) {
-				autoInit.click();
+				try {
+					autoInit.click();
+				} catch (org.openqa.selenium.WebDriverException e) {
+					PageNavigator.actionClick(driver, autoInit);
+				}
 			}
 		}
 		if (null != gitignore) {
-			addGitignore.click();
+			try {
+				addGitignore.click();
+			} catch (org.openqa.selenium.WebDriverException e) {
+				PageNavigator.actionClick(driver, addGitignore);
+			}
 			for (WebElement element : gitignoreList) {
 				if (element.getText().contains(gitignore)) {
 					element.click();
@@ -168,7 +201,11 @@ public class CreateRepositoryPage extends Page {
 			}
 		}
 		if (null != license) {
-			addLicense.click();
+			try {
+				addLicense.click();
+			} catch (org.openqa.selenium.WebDriverException e) {
+				PageNavigator.actionClick(driver, addLicense);
+			}
 			for (WebElement element : licenseList) {
 				if (element.getText().contains(license)) {
 					element.click();

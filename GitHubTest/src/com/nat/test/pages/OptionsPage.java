@@ -2,6 +2,7 @@ package com.nat.test.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -10,7 +11,7 @@ import org.openqa.selenium.support.PageFactory;
  */
 public class OptionsPage extends Page {
 
-	@FindBy(linkText = "Delete this repository")
+	@FindBy(xpath = "//a[contains(@href, 'delete_repo_confirm')]")
 	private WebElement delete;
 
 	@FindBy(xpath = "//*[@id='facebox']/div/div/form/p/input")

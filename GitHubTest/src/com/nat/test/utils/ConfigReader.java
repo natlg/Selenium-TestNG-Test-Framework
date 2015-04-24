@@ -13,6 +13,7 @@ public class ConfigReader {
 	private String password = "";
 	private boolean useAssert = true;
 	private String firefoxPath = "";
+	private String browser ="";
 
 	/**
 	 * Class constructor loads settings from the file and saves to fields
@@ -36,6 +37,7 @@ public class ConfigReader {
 		}
 		login = p.getProperty("LOGIN");
 		password = p.getProperty("PASSWORD");
+		browser = p.getProperty("BROWSER");
 		firefoxPath = p.getProperty("FIREFOX_PATH");
 		try {
 			useAssert = Boolean.parseBoolean(p.getProperty("USE_ASSERT"));
@@ -79,5 +81,9 @@ public class ConfigReader {
 	 */
 	public String getPassword() {
 		return password;
+	}
+	
+	public String getBrowser() {
+		return browser;
 	}
 }
