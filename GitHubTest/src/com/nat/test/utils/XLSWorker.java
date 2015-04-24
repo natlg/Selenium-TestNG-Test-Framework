@@ -1,7 +1,9 @@
 package com.nat.test.utils;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -178,5 +180,50 @@ public class XLSWorker {
 			return false;
 		}
 		return true;
+	}
+
+	public void setCellData(String sheetNameTestData, String testCase,
+			String data, String result) {
+		// Get sheet
+		String sheetName = sheetNameTestData;
+		int index = workbook.getSheetIndex(sheetName);
+		XSSFSheet sheet = workbook.getSheetAt(index);
+
+		// Find row num with test case
+		int rowNum = -1;
+		for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+			Row row = sheet.getRow(i);
+			if (row.getCell(0).getStringCellValue().equals(testCase)) {
+				rowNum = i;
+				break;
+			}
+		}
+		if (rowNum == -1) {
+			throw new IllegalArgumentException(
+					"Can't find test case with the name " + testCase);
+		}
+
+		// Find row num with data and save test result
+		for (int i = rowNum; i <= sheet.getLastRowNum(); i++) {
+			row = sheet.getRow(i);
+			if (row.getCell(1).getStringCellValue().isEmpty()) {
+				break;
+			}
+			if (row.getCell(1).getStringCellValue().equalsIgnoreCase(data)) {
+				cell = row.getCell(3);
+				cell.setCellValue(result);
+			}
+		}
+		try {
+			fos = new FileOutputStream(path);
+			workbook.write(fos);
+			fos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("Didn't find file " + path);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Can't write data!");
+		}
 	}
 }

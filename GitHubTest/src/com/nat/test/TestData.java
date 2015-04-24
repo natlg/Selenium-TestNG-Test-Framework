@@ -36,7 +36,8 @@ public class TestData {
 	public static final int STEP_5 = 5;
 	public static final int STEP_6 = 6;
 	public static final int STEP_7 = 7;
-	public static final String SHEET_NAME = "Test Cases";
+	public static final String SHEET_NAME_TEST_CASE = "TestCases";
+	public static final String SHEET_NAME_TEST_DATA = "TestData";
 	private final static String xlsPath = "xls\\TestCases.xlsx";
 	private static XLSWorker xlsWorker = new XLSWorker(xlsPath);
 
@@ -51,33 +52,33 @@ public class TestData {
 	 *            Test result
 	 */
 	public static void saveTestResult(int testCase, int step, boolean passed) {
-		if (USE_ASSERT) {
-			Assert.assertTrue(passed);
-		}
 		switch (testCase) {
 		case TestData.TEST_LOGIN:
-			xlsWorker.setCellData(TestData.SHEET_NAME, "Result", step + 1,
-					passed ? "Passed" : "Fail");
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
+					step + 1, passed ? "Passed" : "Fail");
 			break;
 		case TestData.TEST_SEARCH:
-			xlsWorker.setCellData(TestData.SHEET_NAME, "Result", step + 6,
-					passed ? "Passed" : "Fail");
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
+					step + 6, passed ? "Passed" : "Fail");
 			break;
 		case TestData.TEST_NOTIFICATIONS:
-			xlsWorker.setCellData(TestData.SHEET_NAME, "Result", step + 8,
-					passed ? "Passed" : "Fail");
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
+					step + 8, passed ? "Passed" : "Fail");
 			break;
 		case TestData.TEST_REPOSITORY_CREATING:
-			xlsWorker.setCellData(TestData.SHEET_NAME, "Result", step + 10,
-					passed ? "Passed" : "Fail");
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
+					step + 10, passed ? "Passed" : "Fail");
 			break;
 		case TestData.TEST_REPOSITORY_DELETING:
-			xlsWorker.setCellData(TestData.SHEET_NAME, "Result", step + 15,
-					passed ? "Passed" : "Fail");
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
+					step + 15, passed ? "Passed" : "Fail");
 			break;
 
 		default:
 			break;
+		}
+		if (USE_ASSERT) {
+			Assert.assertTrue(passed);
 		}
 	}
 
@@ -140,5 +141,12 @@ public class TestData {
 					.implicitlyWait(TestData.WAIT_TIME, TimeUnit.SECONDS);
 		}
 		return driver;
+	}
+
+	public static void saveTestResultWithData(int testCase, int step,
+			boolean passed, String data) {
+		xlsWorker.setCellData(TestData.SHEET_NAME_TEST_DATA, "testSearch",
+				data, passed ? "Passed" : "Fail");
+		saveTestResult(testCase, step, passed);
 	}
 }

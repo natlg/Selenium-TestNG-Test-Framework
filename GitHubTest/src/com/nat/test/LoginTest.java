@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -14,7 +15,6 @@ import org.testng.annotations.Test;
 import com.nat.test.pages.HomePage;
 import com.nat.test.pages.LoginPage;
 import com.nat.test.pages.NotificationsPage;
-import com.nat.test.pages.Page;
 import com.nat.test.pages.SearchPage;
 import com.nat.test.pages.StartPage;
 import com.nat.test.utils.PageNavigator;
@@ -25,6 +25,7 @@ public class LoginTest {
 	private HomePage homePage;
 	private StartPage startPage;
 	private boolean passed = true;
+	private boolean passedSearch = true;
 	private LoginPage loginPage;
 	private NotificationsPage notificationsPage;
 	private PageNavigator pageNavigator = new PageNavigator();
@@ -56,12 +57,11 @@ public class LoginTest {
 	 * 5. Logout, check that logout was successful
 	 */
 
-	@Test
+	@Test(enabled = true)
 	public void testLogin() {
 
 		// 1 step
 		loginPage = pageNavigator.getLoginPage(driver);
-		// getLoginPage();
 		if (null == loginPage) {
 			passed = false;
 		}
@@ -119,7 +119,7 @@ public class LoginTest {
 	 * 2. Fill the search field with the query and check that search result
 	 * appears (if no search result, then message appears)<br>
 	 */
-	@Test(dataProvider = "searchQueriesProvider", enabled = true)
+	@Test(dataProvider = "searchQueriesProvider", enabled = true, groups = { "search" })
 	public void testSearch(String searchQuery, String hasResultStr) {
 		// 1 step
 		startPage = PageFactory.initElements(driver, StartPage.class);
@@ -128,25 +128,39 @@ public class LoginTest {
 
 		// 2 step
 		searchPage = pageNavigator.search(driver, searchQuery, startPage);
-		// startPage.search(searchQuery);
 		boolean hasResult = Boolean.parseBoolean(hasResultStr);
+		passed = false;
 		if (hasResult) {
 			List<WebElement> searchResults = searchPage.getSearchResults();
 			for (WebElement result : searchResults) {
-				passed = result.getAttribute("href").toLowerCase()
-						.contains(searchQuery);
-				TestData.saveTestResult(TestData.TEST_SEARCH, TestData.STEP_2,
-						passed);
-
+				if (result.getAttribute("href").toLowerCase()
+						.contains(searchQuery)) {
+					passed = true;
+				}
 			}
+			if (!passed) {
+				passedSearch = false;
+			}
+			// Save test result for certain data from DataProvider
+			TestData.saveTestResultWithData(TestData.TEST_SEARCH,
+					TestData.STEP_2, passed, searchQuery);
 		} else {
 			passed = searchPage.isErrorNoResultPresents();
-			TestData.saveTestResult(TestData.TEST_SEARCH, TestData.STEP_2,
-					passed);
-
+			if (!passed) {
+				passedSearch = false;
+			}
+			// Save test result for certain data from DataProvider
+			TestData.saveTestResultWithData(TestData.TEST_SEARCH,
+					TestData.STEP_2, passed, searchQuery);
 		}
-		// need for correct work with next data
 		driver.get(TestData.BASE_URL);
+	}
+
+	@AfterMethod(groups = { "search" })
+	public void afterSearch() {
+		// Save result as passed only if test passed with all data from DataProvider
+		TestData.saveTestResult(TestData.TEST_SEARCH, TestData.STEP_2,
+				passedSearch);
 	}
 
 	@DataProvider(name = "searchQueriesProvider")
