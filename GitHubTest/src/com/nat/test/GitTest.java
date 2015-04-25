@@ -19,7 +19,7 @@ import com.nat.test.pages.SearchPage;
 import com.nat.test.pages.StartPage;
 import com.nat.test.utils.PageNavigator;
 
-public class LoginTest {
+public class GitTest {
 	private WebDriver driver;
 	private SearchPage searchPage;
 	private HomePage homePage;
@@ -94,7 +94,6 @@ public class LoginTest {
 	 * 1. Log in, check that notifications icon presents on the home page <br>
 	 * 2. Click the notifications icon, check that all sections present <br>
 	 */
-
 	@Test(enabled = true)
 	public void testNotifications() {
 
@@ -158,7 +157,8 @@ public class LoginTest {
 
 	@AfterMethod(groups = { "search" })
 	public void afterSearch() {
-		// Save result as passed only if test passed with all data from DataProvider
+		// Save result as passed only if test passed with all data from
+		// DataProvider
 		TestData.saveTestResult(TestData.TEST_SEARCH, TestData.STEP_2,
 				passedSearch);
 	}

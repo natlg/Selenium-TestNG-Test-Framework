@@ -2,14 +2,13 @@ package com.nat.test.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 /**
  * Class represents page with Repository settings
  */
-public class OptionsPage extends Page {
+public class OptionsPage extends RepositoryAbstractPage {
 
 	@FindBy(xpath = "//a[contains(@href, 'delete_repo_confirm')]")
 	private WebElement delete;
@@ -60,5 +59,16 @@ public class OptionsPage extends Page {
 		deleteField.submit();
 		return PageFactory.initElements(driver, HomePage.class);
 	}
-
+	
+	/**
+	 * Method to delete current repository
+	 * 
+	 * @return An instance of {@link HomePage} class
+	 */
+	public HomePage deleteRepository() {
+		delete.click();
+		deleteField.sendKeys(repNameElement.getText());
+		deleteField.submit();
+		return PageFactory.initElements(driver, HomePage.class);
+	}
 }

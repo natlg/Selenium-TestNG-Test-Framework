@@ -9,7 +9,9 @@ import com.nat.test.TestData;
 import com.nat.test.pages.CreateRepositoryPage;
 import com.nat.test.pages.HomePage;
 import com.nat.test.pages.LoginPage;
+import com.nat.test.pages.OptionsPage;
 import com.nat.test.pages.Page;
+import com.nat.test.pages.RepositoryAbstractPage;
 import com.nat.test.pages.RepositoryPage;
 import com.nat.test.pages.SearchPage;
 import com.nat.test.pages.StartPage;
@@ -24,6 +26,7 @@ public class PageNavigator {
 	private HomePage homePage;
 	private CreateRepositoryPage createRepositoryPage;
 	private RepositoryPage repositoryPage;
+	private OptionsPage optionsPage;
 
 	/**
 	 * Navigate to the page with the login form. Need to sign out before
@@ -158,19 +161,35 @@ public class PageNavigator {
 		page.search(query);
 		return PageFactory.initElements(driver, SearchPage.class);
 	}
-	
+
 	/**
-	 * Method to perform click using {@link Actions} class. Call if simple click 
-	 * doesn't work for {@link ChromeDriver} 
+	 * Method to perform click using {@link Actions} class. Call if simple click
+	 * doesn't work for {@link ChromeDriver}
 	 *
 	 * @param driver
 	 *            The driver that will be used for navigation
 	 * @param element
 	 *            Element to click
 	 */
-	public static void actionClick (WebDriver driver , WebElement element) {
+	public static void actionClick(WebDriver driver, WebElement element) {
 		Actions action = new Actions(driver);
 		action.moveToElement(element).perform();
 		action.click().perform();
+	}
+
+	/**
+	 * Method to delete repository
+	 *
+	 * @param driver
+	 *            The driver that will be used for navigation
+	 * @param page
+	 *            Page with repository to delete
+	 * @return An instance of {@link HomePage} class
+	 */
+	public HomePage deleteRepository(WebDriver driver,
+			RepositoryAbstractPage page) {
+		optionsPage = page.goToSettings();
+		homePage = optionsPage.deleteRepository();
+		return homePage;
 	}
 }

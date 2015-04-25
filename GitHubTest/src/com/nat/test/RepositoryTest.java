@@ -1,25 +1,17 @@
 package com.nat.test;
 
-import java.io.File;
-import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.support.PageFactory;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.nat.test.pages.CreateRepositoryPage;
 import com.nat.test.pages.HomePage;
-import com.nat.test.pages.LoginPage;
+import com.nat.test.pages.IssuePage;
+import com.nat.test.pages.IssuesSectionPage;
 import com.nat.test.pages.OptionsPage;
 import com.nat.test.pages.RepositoryPage;
-import com.nat.test.pages.StartPage;
 import com.nat.test.utils.PageNavigator;
 
 public class RepositoryTest {
@@ -35,6 +27,7 @@ public class RepositoryTest {
 	private RepositoryPage repositoryPage;
 	private PageNavigator pageNavigator = new PageNavigator();
 	private OptionsPage optionsPage;
+	private IssuesSectionPage issuesSectionPage;
 
 	@BeforeClass
 	public void beforeClass() {
@@ -64,35 +57,36 @@ public class RepositoryTest {
 	 * 5. Delete this repository
 	 */
 	@Test(enabled = true)
-	public void testRepositoryCreating() {
+	public void testAddRepository() {
 		// 1 step
 		homePage = pageNavigator.login(driver);
-		TestData.saveTestResult(TestData.TEST_REPOSITORY_CREATING, TestData.STEP_1,
-				homePage.isNewRepoButtonPresents());
+		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY,
+				TestData.STEP_1, homePage.isNewRepoButtonPresents());
 		createRepositoryPage = homePage.createNewRepository();
 
 		// 2 step
-		TestData.saveTestResult(TestData.TEST_REPOSITORY_CREATING, TestData.STEP_2,
-				createRepositoryPage.isNewRepFormExists()
+		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY,
+				TestData.STEP_2, createRepositoryPage.isNewRepFormExists()
 						&& createRepositoryPage.isNewRepFormJSWorks());
 
 		// 3 step
 		String repName = pageNavigator.getUniqueRepName();
 		repositoryPage = createRepositoryPage.createRepository(repName,
 				repDescription, addReadme, gitignore, license);
-		TestData.saveTestResult(TestData.TEST_REPOSITORY_CREATING, TestData.STEP_3,
-				null != repositoryPage);
+		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY,
+				TestData.STEP_3, null != repositoryPage);
 
 		// 4 step
-		TestData.saveTestResult(TestData.TEST_REPOSITORY_CREATING, TestData.STEP_4,
+		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY,
+				TestData.STEP_4,
 				repositoryPage.getRepositoryName().equals(repName)
-						&& repositoryPage.areSectionsPresent());
+						&& repositoryPage.areRepSectionsPresent());
 
 		// 5 step
 		optionsPage = repositoryPage.goToSettings();
 		homePage = optionsPage.deleteRepository(repName);
-		TestData.saveTestResult(TestData.TEST_REPOSITORY_CREATING, TestData.STEP_5,
-				null != homePage);
+		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY,
+				TestData.STEP_5, null != homePage);
 		repositoryPage.logout();
 	}
 
@@ -106,23 +100,77 @@ public class RepositoryTest {
 	 * the list of existing repositories
 	 */
 	@Test(enabled = true)
-	public void testRepositoryDeleting() {
+	public void testDeleteRepository() {
 		// 1 step
 		repositoryPage = pageNavigator.getNewRepositoryPage(driver,
 				repDescription, addReadme, gitignore, license);
 		currentRepName = repositoryPage.getRepositoryName();
 		OptionsPage optionsPage = repositoryPage.goToSettings();
-		TestData.saveTestResult(TestData.TEST_REPOSITORY_DELETING, TestData.STEP_1,
-				null != optionsPage);
+		TestData.saveTestResult(TestData.TEST_DELETE_REPOSITORY,
+				TestData.STEP_1, null != optionsPage);
 
 		// 2 step
-		TestData.saveTestResult(TestData.TEST_REPOSITORY_DELETING, TestData.STEP_2,
-				optionsPage.isDeletePresents());
+		TestData.saveTestResult(TestData.TEST_DELETE_REPOSITORY,
+				TestData.STEP_2, optionsPage.isDeletePresents());
 
 		// 3 step
 		homePage = optionsPage.deleteRepository(currentRepName);
-		TestData.saveTestResult(TestData.TEST_REPOSITORY_DELETING, TestData.STEP_3,
+		TestData.saveTestResult(TestData.TEST_DELETE_REPOSITORY,
+				TestData.STEP_3,
 				homePage.isRepositoryJustDeleted(currentRepName));
+		homePage.logout();
+	}
+
+	/**
+	 * Tests correct issue adding.
+	 * <p>
+	 * 1. Log in, add new repository <br>
+	 * 2. Click on Issues link, check that all sections and welcome message
+	 * present <br>
+	 * 3. Click the link to create issue, check that Title, Comments fields and
+	 * Labels, Milestone, Assignee links present <br>
+	 * 4. Fill all fields and confirm creating, check that issue submitted <br>
+	 * 5. Navigate to Issues Section page and check that new issue appeared in
+	 * the list of issues <br>
+	 * 6. Delete repository
+	 */
+	@Test(enabled = true)
+	public void testAddIssue() {
+		// 1 step
+		repositoryPage = pageNavigator.getNewRepositoryPage(driver,
+				repDescription, addReadme, gitignore, license);
+		TestData.saveTestResult(TestData.TEST_ADD_ISSUE, TestData.STEP_1,
+				null != repositoryPage);
+
+		// 2 step
+		issuesSectionPage = repositoryPage.goToIssues();
+		TestData.saveTestResult(
+				TestData.TEST_ADD_ISSUE,
+				TestData.STEP_2,
+				issuesSectionPage.areAllElementsPresent()
+						&& issuesSectionPage.isWelcomeMessagePresent());
+
+		// 3 step
+		IssuePage issuePage = issuesSectionPage.addNewIssue();
+		TestData.saveTestResult(TestData.TEST_ADD_ISSUE, TestData.STEP_3,
+				issuePage.areNewIssueElementsPresent());
+
+		// 4 step
+		String title = "New issue";
+		String comment = "Comment";
+		issuePage.addIssue(title, comment);
+		TestData.saveTestResult(TestData.TEST_ADD_ISSUE, TestData.STEP_4,
+				issuePage.IsIssueJustAdded());
+
+		// 5 step
+		issuesSectionPage = issuePage.goToIssues();
+		TestData.saveTestResult(TestData.TEST_ADD_ISSUE, TestData.STEP_5,
+				issuesSectionPage.isIssuePresent(title));
+
+		// 6 step
+		homePage = pageNavigator.deleteRepository(driver, issuesSectionPage);
+		TestData.saveTestResult(TestData.TEST_ADD_ISSUE, TestData.STEP_6,
+				null != homePage);
 		homePage.logout();
 	}
 }

@@ -28,8 +28,9 @@ public class TestData {
 	public static final int TEST_LOGIN = 1;
 	public static final int TEST_SEARCH = 2;
 	public static final int TEST_NOTIFICATIONS = 3;
-	public static final int TEST_REPOSITORY_CREATING = 4;
-	public static final int TEST_REPOSITORY_DELETING = 5;
+	public static final int TEST_ADD_REPOSITORY = 4;
+	public static final int TEST_DELETE_REPOSITORY = 5;
+	public static final int TEST_ADD_ISSUE = 6;
 	public static final int STEP_1 = 1;
 	public static final int STEP_2 = 2;
 	public static final int STEP_3 = 3;
@@ -66,14 +67,17 @@ public class TestData {
 			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
 					step + 8, passed ? "Passed" : "Fail");
 			break;
-		case TestData.TEST_REPOSITORY_CREATING:
+		case TestData.TEST_ADD_REPOSITORY:
 			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
 					step + 10, passed ? "Passed" : "Fail");
 			break;
-		case TestData.TEST_REPOSITORY_DELETING:
+		case TestData.TEST_DELETE_REPOSITORY:
 			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
 					step + 15, passed ? "Passed" : "Fail");
 			break;
+		case TestData.TEST_ADD_ISSUE:
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
+					step + 18, passed ? "Passed" : "Fail");
 
 		default:
 			break;
@@ -101,15 +105,6 @@ public class TestData {
 		}
 
 	}
-
-	// public static void readPropertiesFile() throws IOException {
-	// FileInputStream fis = new FileInputStream("data/config.properties");
-	// Properties p = new Properties();
-	// p.load(fis);
-	// System.out.println("LOGIN = " + p.getProperty("LOGIN"));
-	// System.out.println("PASSWORD = " + p.getProperty("PASSWORD"));
-	// System.out.println("FIREFOX_PATH = " + p.getProperty("FIREFOX_PATH"));
-	// }
 
 	/**
 	 * Method to get the driver. WebDriver type is determined in
@@ -148,7 +143,7 @@ public class TestData {
 				break;
 			}
 			driver.manage().timeouts()
-			.implicitlyWait(WAIT_TIME, TimeUnit.SECONDS);
+					.implicitlyWait(WAIT_TIME, TimeUnit.SECONDS);
 		}
 		return driver;
 	}
