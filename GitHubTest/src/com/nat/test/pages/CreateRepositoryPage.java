@@ -110,7 +110,7 @@ public class CreateRepositoryPage extends Page {
 
 	/**
 	 * Check if dropdowns to choose owner, gitignore and license appear if click
-	 * it's elements
+	 * theirs elements
 	 *
 	 * @return True if dropdowns to choose owner, gitignore and license appear
 	 *         if click it's elements
@@ -119,30 +119,17 @@ public class CreateRepositoryPage extends Page {
 		boolean isChooseOwnerPresents;
 		boolean isGitignorePresents;
 		boolean isLicensePresents;
-		try {
-			owner.click();
-			isChooseOwnerPresents = isElementPresents(chooseOwner);
+		PageNavigator.click(driver, owner);
+		owner.click();
+		isChooseOwnerPresents = isElementPresents(chooseOwner);
 
-			addGitignore.click();
-			isGitignorePresents = isElementPresents(chooseGitignore);
+		PageNavigator.click(driver, addGitignore);
+		addGitignore.click();
+		isGitignorePresents = isElementPresents(chooseGitignore);
 
-			addLicense.click();
-			isLicensePresents = isElementPresents(chooseLicense);
-
-		} catch (org.openqa.selenium.WebDriverException e) {
-			// simple click works for FirefoxDriver but not for ChromeDriver
-			PageNavigator.actionClick(driver, owner);
-			owner.click();
-			isChooseOwnerPresents = isElementPresents(chooseOwner);
-			
-			PageNavigator.actionClick(driver, addGitignore);
-			addGitignore.click();
-			isGitignorePresents = isElementPresents(chooseGitignore);
-
-			PageNavigator.actionClick(driver, addLicense);
-			addLicense.click();
-			isLicensePresents = isElementPresents(chooseLicense);
-		}
+		PageNavigator.click(driver, addLicense);
+		addLicense.click();
+		isLicensePresents = isElementPresents(chooseLicense);
 		return isChooseOwnerPresents && isGitignorePresents
 				&& isLicensePresents;
 	}
@@ -172,28 +159,15 @@ public class CreateRepositoryPage extends Page {
 		this.repDescription.sendKeys(repDescription);
 		if (autoInit.isSelected()) {
 			if (!addReadme) {
-				try {
-					autoInit.click();
-				} catch (org.openqa.selenium.WebDriverException e) {
-					PageNavigator.actionClick(driver, autoInit);
-				}
-				
+				PageNavigator.click(driver, autoInit);
 			}
 		} else {
 			if (addReadme) {
-				try {
-					autoInit.click();
-				} catch (org.openqa.selenium.WebDriverException e) {
-					PageNavigator.actionClick(driver, autoInit);
-				}
+				PageNavigator.click(driver, autoInit);
 			}
 		}
 		if (null != gitignore) {
-			try {
-				addGitignore.click();
-			} catch (org.openqa.selenium.WebDriverException e) {
-				PageNavigator.actionClick(driver, addGitignore);
-			}
+			PageNavigator.click(driver, addGitignore);
 			for (WebElement element : gitignoreList) {
 				if (element.getText().contains(gitignore)) {
 					element.click();
@@ -201,11 +175,7 @@ public class CreateRepositoryPage extends Page {
 			}
 		}
 		if (null != license) {
-			try {
-				addLicense.click();
-			} catch (org.openqa.selenium.WebDriverException e) {
-				PageNavigator.actionClick(driver, addLicense);
-			}
+			PageNavigator.click(driver, addLicense);
 			for (WebElement element : licenseList) {
 				if (element.getText().contains(license)) {
 					element.click();

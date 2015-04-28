@@ -15,20 +15,6 @@ public class IssuePage extends RepositoryAbstractPage {
 	@FindBy(xpath = "//button[contains(text(), 'Submit new issue')]")
 	private WebElement submitNewIssueBtn;
 
-//	@FindBy(xpath = "//button[contains(@class, 'discussion-sidebar-heading')]/span")
-//	List <WebElement> issueSettings;
-
-	// @FindBy(xpath = "//button/span[contains(text(), 'Labels')]")
-	// private WebElement labels;
-	//
-	// @FindBy(xpath = "//button[contains(text(), 'Milestone')]")
-	// private WebElement milestone;
-	//
-	// @FindBy(xpath = "//button[contains(text(), 'Assignee')]")
-	// private WebElement assignee;
-
-	// div[contains(text(), 'opened this')][contains(text(), 'minutes ago')]
-
 	@FindBy(xpath = "//time[contains(text(), 'just now')]")
 	private WebElement timeJustAdded;
 
@@ -54,35 +40,6 @@ public class IssuePage extends RepositoryAbstractPage {
 	}
 
 	public boolean areNewIssueElementsPresent() {
-		
-//		boolean hasLabels = false;
-//		boolean hasMilestone = false;
-//		boolean hasAssignee = false;
-//		if (null == issueSettings) {
-//			System.out.println("null");
-////			issueSettings = driver
-////					.findElements(By
-////							.xpath("//button[contains(@class, 'discussion-sidebar-heading')]/text()[2]"));
-//		}
-//		System.out.println(issueSettings.size());
-//		for (WebElement setEl : issueSettings) {
-//			String setting = setEl.getText();
-//			System.out.println("set " + setting);
-//			if (setting.equalsIgnoreCase("labels")) {
-//				hasLabels = true;
-//			}
-//			if (setting.equalsIgnoreCase("milestone")) {
-//				hasMilestone = true;
-//			}
-//			if (setting.equalsIgnoreCase("assignee")) {
-//				hasAssignee = true;
-//			}
-//		}
-//		 System.out.println("new " + isElementPresents(title)
-//				 + isElementPresents(comment)
-//				 + isElementPresents(submitNewIssueBtn)
-//				 + hasLabels + hasMilestone
-//				 + hasAssignee);
 		return isElementPresents(title) && isElementPresents(comment)
 				&& isElementPresents(submitNewIssueBtn);
 	}

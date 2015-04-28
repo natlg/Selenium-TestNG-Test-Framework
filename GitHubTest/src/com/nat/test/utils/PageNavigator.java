@@ -171,10 +171,14 @@ public class PageNavigator {
 	 * @param element
 	 *            Element to click
 	 */
-	public static void actionClick(WebDriver driver, WebElement element) {
-		Actions action = new Actions(driver);
-		action.moveToElement(element).perform();
-		action.click().perform();
+	public static void click(WebDriver driver, WebElement element) {
+		try {
+			element.click();
+		} catch (org.openqa.selenium.WebDriverException e) {
+			Actions action = new Actions(driver);
+			action.moveToElement(element).perform();
+			action.click().perform();
+		}
 	}
 
 	/**

@@ -42,6 +42,12 @@ public class TestData {
 	public static final String SHEET_NAME_TEST_DATA = "TestData";
 	private final static String xlsPath = "xls\\TestCases.xlsx";
 	private static XLSWorker xlsWorker = new XLSWorker(xlsPath);
+	private static final int startRowNumTest1 = 1;
+	private static final int startRowNumTest2 = 6;
+	private static final int startRowNumTest3 = 8;
+	private static final int startRowNumTest4 = 10;
+	private static final int startRowNumTest5 = 15;
+	private static final int startRowNumTest6 = 18;
 
 	/**
 	 * Saves test results to the excel file (passed or fail)
@@ -55,35 +61,73 @@ public class TestData {
 	 */
 	public static void saveTestResult(int testCase, int step, boolean passed) {
 		switch (testCase) {
-		case TestData.TEST_LOGIN:
-			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
-					step + 1, passed ? "Passed" : "Fail");
+		case TEST_LOGIN:
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result", step
+					+ startRowNumTest1, passed ? "Passed" : "Fail");
 			break;
-		case TestData.TEST_SEARCH:
-			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
-					step + 6, passed ? "Passed" : "Fail");
+		case TEST_SEARCH:
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result", step
+					+ startRowNumTest2, passed ? "Passed" : "Fail");
 			break;
-		case TestData.TEST_NOTIFICATIONS:
-			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
-					step + 8, passed ? "Passed" : "Fail");
+		case TEST_NOTIFICATIONS:
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result", step
+					+ startRowNumTest3, passed ? "Passed" : "Fail");
 			break;
-		case TestData.TEST_ADD_REPOSITORY:
-			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
-					step + 10, passed ? "Passed" : "Fail");
+		case TEST_ADD_REPOSITORY:
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result", step
+					+ startRowNumTest4, passed ? "Passed" : "Fail");
 			break;
-		case TestData.TEST_DELETE_REPOSITORY:
-			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
-					step + 15, passed ? "Passed" : "Fail");
+		case TEST_DELETE_REPOSITORY:
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result", step
+					+ startRowNumTest5, passed ? "Passed" : "Fail");
 			break;
-		case TestData.TEST_ADD_ISSUE:
-			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result",
-					step + 18, passed ? "Passed" : "Fail");
+		case TEST_ADD_ISSUE:
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_CASE, "Result", step
+					+ startRowNumTest6, passed ? "Passed" : "Fail");
 
 		default:
+			System.out.println("No Test Case with number " + testCase
+					+ " is found in the file");
 			break;
 		}
 		if (USE_ASSERT) {
 			Assert.assertTrue(passed);
+		}
+	}
+
+	/**
+	 * Saves test results from certain test data to the excel file (passed or
+	 * fail)
+	 *
+	 * @param testCase
+	 *            Test case
+	 * @param passed
+	 *            Test result
+	 * @param data
+	 *            Test data
+	 */
+	public static void saveTestResultWithData(int testCase, boolean passed,
+			String data) {
+		switch (testCase) {
+		case TEST_LOGIN:
+			break;
+		case TEST_SEARCH:
+			xlsWorker.setCellData(TestData.SHEET_NAME_TEST_DATA, "testSearch",
+					data, passed ? "Passed" : "Fail");
+			break;
+		case TEST_NOTIFICATIONS:
+			break;
+		case TEST_ADD_REPOSITORY:
+			break;
+		case TEST_DELETE_REPOSITORY:
+			break;
+		case TEST_ADD_ISSUE:
+			break;
+
+		default:
+			System.out.println("No Test Case with number " + testCase
+					+ " is found in the file");
+			break;
 		}
 	}
 
@@ -146,12 +190,5 @@ public class TestData {
 					.implicitlyWait(WAIT_TIME, TimeUnit.SECONDS);
 		}
 		return driver;
-	}
-
-	public static void saveTestResultWithData(int testCase, int step,
-			boolean passed, String data) {
-		xlsWorker.setCellData(TestData.SHEET_NAME_TEST_DATA, "testSearch",
-				data, passed ? "Passed" : "Fail");
-		saveTestResult(testCase, step, passed);
 	}
 }

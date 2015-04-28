@@ -141,16 +141,16 @@ public class GitTest {
 				passedSearch = false;
 			}
 			// Save test result for certain data from DataProvider
-			TestData.saveTestResultWithData(TestData.TEST_SEARCH,
-					TestData.STEP_2, passed, searchQuery);
+			TestData.saveTestResultWithData(TestData.TEST_SEARCH, passed,
+					searchQuery);
 		} else {
 			passed = searchPage.isErrorNoResultPresents();
 			if (!passed) {
 				passedSearch = false;
 			}
 			// Save test result for certain data from DataProvider
-			TestData.saveTestResultWithData(TestData.TEST_SEARCH,
-					TestData.STEP_2, passed, searchQuery);
+			TestData.saveTestResultWithData(TestData.TEST_SEARCH, passed,
+					searchQuery);
 		}
 		driver.get(TestData.BASE_URL);
 	}
