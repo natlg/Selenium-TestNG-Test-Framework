@@ -120,16 +120,28 @@ public class CreateRepositoryPage extends Page {
 		boolean isGitignorePresents;
 		boolean isLicensePresents;
 		PageNavigator.click(driver, owner);
-		owner.click();
-		isChooseOwnerPresents = isElementPresents(chooseOwner);
+		if (!isElementPresents(chooseOwner)) {
+			owner.click();
+			isChooseOwnerPresents = isElementPresents(chooseOwner);
+		} else {
+			isChooseOwnerPresents = true;
+		}
 
 		PageNavigator.click(driver, addGitignore);
-		addGitignore.click();
-		isGitignorePresents = isElementPresents(chooseGitignore);
+		if (!isElementPresents(chooseGitignore)) {
+			addGitignore.click();
+			isGitignorePresents = isElementPresents(addGitignore);
+		} else {
+			isGitignorePresents = true;
+		}
 
 		PageNavigator.click(driver, addLicense);
-		addLicense.click();
-		isLicensePresents = isElementPresents(chooseLicense);
+		if (!isElementPresents(chooseLicense)) {
+			addLicense.click();
+			isLicensePresents = isElementPresents(addLicense);
+		} else {
+			isLicensePresents = true;
+		}
 		return isChooseOwnerPresents && isGitignorePresents
 				&& isLicensePresents;
 	}
