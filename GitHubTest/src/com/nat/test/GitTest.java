@@ -33,7 +33,6 @@ public class GitTest {
 	@BeforeClass
 	public void beforeClass() {
 		driver = TestData.getDriver();
-
 	}
 
 	@BeforeMethod
