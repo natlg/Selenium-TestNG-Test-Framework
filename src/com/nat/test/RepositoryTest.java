@@ -12,6 +12,7 @@ import com.nat.test.pages.IssuePage;
 import com.nat.test.pages.IssuesSectionPage;
 import com.nat.test.pages.OptionsPage;
 import com.nat.test.pages.RepositoryPage;
+import com.nat.test.pages.StartPage;
 import com.nat.test.utils.PageNavigator;
 
 public class RepositoryTest {
@@ -28,6 +29,7 @@ public class RepositoryTest {
 	private PageNavigator pageNavigator = new PageNavigator();
 	private OptionsPage optionsPage;
 	private IssuesSectionPage issuesSectionPage;
+	private StartPage startPage;
 
 	@BeforeClass
 	public void beforeClass() {
@@ -60,34 +62,32 @@ public class RepositoryTest {
 	public void testAddRepository() {
 		// 1 step
 		homePage = pageNavigator.login(driver);
-		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY,
-				TestData.STEP_1, homePage.isNewRepoButtonPresents());
+		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY, TestData.STEP_1,
+				homePage.isNewRepoButtonPresents());
 		createRepositoryPage = homePage.createNewRepository();
 
 		// 2 step
-		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY,
-				TestData.STEP_2, createRepositoryPage.isNewRepFormExists()
+		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY, TestData.STEP_2,
+				createRepositoryPage.isNewRepFormExists()
 						&& createRepositoryPage.isNewRepFormJSWorks());
 
 		// 3 step
 		String repName = pageNavigator.getUniqueRepName();
 		repositoryPage = createRepositoryPage.createRepository(repName,
 				repDescription, addReadme, gitignore, license);
-		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY,
-				TestData.STEP_3, null != repositoryPage);
+		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY, TestData.STEP_3,
+				null != repositoryPage);
 
 		// 4 step
-		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY,
-				TestData.STEP_4,
+		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY, TestData.STEP_4,
 				repositoryPage.getRepositoryName().equals(repName)
 						&& repositoryPage.areRepSectionsPresent());
 
 		// 5 step
-		optionsPage = repositoryPage.goToSettings();
-		homePage = optionsPage.deleteRepository(repName);
-		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY,
-				TestData.STEP_5, null != homePage);
-		repositoryPage.logout();
+		startPage = pageNavigator.deleteRepositiryAndLogout(driver, repName,
+				repositoryPage);
+		TestData.saveTestResult(TestData.TEST_ADD_REPOSITORY, TestData.STEP_5,
+				null != startPage);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class RepositoryTest {
 		// 1 step
 		repositoryPage = pageNavigator.getNewRepositoryPage(driver,
 				repDescription, addReadme, gitignore, license);
-		currentRepName = repositoryPage.getRepositoryName();
+		currentRepName = TestData.getData().getRepositoryName();
 		OptionsPage optionsPage = repositoryPage.goToSettings();
 		TestData.saveTestResult(TestData.TEST_DELETE_REPOSITORY,
 				TestData.STEP_1, null != optionsPage);

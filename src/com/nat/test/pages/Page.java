@@ -13,6 +13,27 @@ public abstract class Page {
 	protected WebDriver driver;
 
 	/**
+	 * Class constructor
+	 * 
+	 * @param driver
+	 *            The driver that will be used for navigation
+	 * @throws IllegalStateException
+	 *             If it's not expected page
+	 */
+	public Page(WebDriver driver) {
+		this.driver = driver;
+		String title = driver.getTitle().trim();
+		String expTitle = (String) getExpectedTitle();
+		System.out.println("title: " + title + " exp title: " + expTitle);
+		if (null != expTitle && !title.contains(expTitle)) {
+			throw new IllegalStateException("This is not the " + expTitle
+					+ ", this is " + title);
+		}
+	}
+
+	public abstract CharSequence getExpectedTitle();
+
+	/**
 	 * presents in new design
 	 */
 	@FindBy(xpath = "//button[contains(@class, 'sign-out-button')]")

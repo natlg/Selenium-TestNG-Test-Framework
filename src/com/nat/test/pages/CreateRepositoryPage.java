@@ -8,6 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import com.nat.test.TestData;
 import com.nat.test.utils.PageNavigator;
 
 /**
@@ -74,13 +75,7 @@ public class CreateRepositoryPage extends Page {
 	 *             If it's not expected page
 	 */
 	public CreateRepositoryPage(WebDriver driver) {
-		this.driver = driver;
-		// Check that we're on the right page.
-		if (!"Create a New Repository".equals(driver.getTitle())) {
-			throw new IllegalStateException(
-					"This is not the CreateRepository page, this is "
-							+ driver.getTitle());
-		}
+		super(driver);
 	}
 
 	/**
@@ -195,9 +190,9 @@ public class CreateRepositoryPage extends Page {
 			}
 		}
 		repSubmit.click();
-		RepositoryPage repPage = new RepositoryPage(repName, driver);
-		repPage.setRepName(repName);
-		return repPage;
+		TestData data = TestData.getData();
+		data.setRepositoryName(repName);
+		return PageFactory.initElements(driver, RepositoryPage.class);
 	}
 
 	/**
@@ -207,5 +202,15 @@ public class CreateRepositoryPage extends Page {
 	 */
 	public String getRepositoryName() {
 		return repName;
+	}
+
+	/**
+	 * Method to get expected page title
+	 *
+	 * @return expected page title
+	 */
+	@Override
+	public String getExpectedTitle() {
+		return "Create a New Repository";
 	}
 }

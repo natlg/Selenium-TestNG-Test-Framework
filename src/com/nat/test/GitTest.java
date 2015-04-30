@@ -24,8 +24,8 @@ public class GitTest {
 	private SearchPage searchPage;
 	private HomePage homePage;
 	private StartPage startPage;
-	private boolean passed = true;
-	private boolean passedSearch = true;
+	private boolean passedWithCertainData;
+	private boolean passedSearchTest = true;
 	private LoginPage loginPage;
 	private NotificationsPage notificationsPage;
 	private PageNavigator pageNavigator = new PageNavigator();
@@ -61,30 +61,28 @@ public class GitTest {
 
 		// 1 step
 		loginPage = pageNavigator.getLoginPage(driver);
-		if (null == loginPage) {
-			passed = false;
-		}
-		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_1, passed);
+		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_1,
+				null != loginPage);
 
 		// 2 step
-		passed = loginPage.isLoginFormPresents();
-		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_2, passed);
+		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_2,
+				loginPage.isLoginFormPresents());
 
 		// 3 step
 		loginPage.loginAsExpectingError("qqq", "qqq");
-		passed = loginPage.isErrorMessagePresents();
-		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_3, passed);
+		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_3,
+				loginPage.isErrorMessagePresents());
 
 		// 4 step
 		HomePage homePage = loginPage
 				.loginAs(TestData.LOGIN, TestData.PASSWORD);
-		passed = homePage.isLoginSuccessed();
-		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_4, passed);
+		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_4,
+				homePage.isLoginSuccessed());
 
 		// 5 step
 		startPage = pageNavigator.logout(driver, homePage);
-		passed = startPage.isLoginPresents();
-		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_5, passed);
+		TestData.saveTestResult(TestData.TEST_LOGIN, TestData.STEP_5,
+				startPage.isLoginPresents());
 	}
 
 	/**
@@ -98,15 +96,13 @@ public class GitTest {
 
 		// 1 step
 		homePage = pageNavigator.login(driver);
-		// login();
 		TestData.saveTestResult(TestData.TEST_NOTIFICATIONS, TestData.STEP_1,
 				homePage.isNotificationsIconPresents());
 
 		// 2 step
 		notificationsPage = homePage.seeNotifications();
-		passed = notificationsPage.isNoticicationsPresent();
 		TestData.saveTestResult(TestData.TEST_NOTIFICATIONS, TestData.STEP_2,
-				passed);
+				notificationsPage.isNoticicationsPresent());
 		notificationsPage.logout();
 	}
 
@@ -121,45 +117,28 @@ public class GitTest {
 	public void testSearch(String searchQuery, String hasResultStr) {
 		// 1 step
 		startPage = PageFactory.initElements(driver, StartPage.class);
-		passed = startPage.isSearchPresents();
-		TestData.saveTestResult(TestData.TEST_SEARCH, TestData.STEP_1, passed);
+		passedWithCertainData = startPage.isSearchPresents();
+		TestData.saveTestResult(TestData.TEST_SEARCH, TestData.STEP_1,
+				passedWithCertainData);
 
 		// 2 step
 		searchPage = pageNavigator.search(driver, searchQuery, startPage);
-		boolean hasResult = Boolean.parseBoolean(hasResultStr);
-		passed = false;
-		if (hasResult) {
-			List<WebElement> searchResults = searchPage.getSearchResults();
-			for (WebElement result : searchResults) {
-				if (result.getAttribute("href").toLowerCase()
-						.contains(searchQuery)) {
-					passed = true;
-				}
-			}
-			if (!passed) {
-				passedSearch = false;
-			}
-			// Save test result for certain data from DataProvider
-			TestData.saveTestResultWithData(TestData.TEST_SEARCH, passed,
-					searchQuery);
-		} else {
-			passed = searchPage.isErrorNoResultPresents();
-			if (!passed) {
-				passedSearch = false;
-			}
-			// Save test result for certain data from DataProvider
-			TestData.saveTestResultWithData(TestData.TEST_SEARCH, passed,
-					searchQuery);
+		passedWithCertainData = searchPage.isResultMatch(
+				Boolean.parseBoolean(hasResultStr), searchQuery);
+		if (!passedWithCertainData) {
+			passedSearchTest = false;
 		}
-		driver.get(TestData.BASE_URL);
+		TestData.saveTestResultWithData(TestData.TEST_SEARCH,
+				passedWithCertainData, searchQuery);
 	}
 
 	@AfterMethod(groups = { "search" })
 	public void afterSearch() {
 		// Save result as passed only if test passed with all data from
 		// DataProvider
+		driver.get(TestData.BASE_URL);
 		TestData.saveTestResult(TestData.TEST_SEARCH, TestData.STEP_2,
-				passedSearch);
+				passedSearchTest);
 	}
 
 	@DataProvider(name = "searchQueriesProvider")

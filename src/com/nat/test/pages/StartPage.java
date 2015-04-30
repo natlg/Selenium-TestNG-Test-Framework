@@ -24,13 +24,7 @@ public class StartPage extends Page {
 	 *             If it's not expected page
 	 */
 	public StartPage(WebDriver driver) {
-		this.driver = driver;
-		// Check that we're on the right page.
-		if (!"GitHub · Build software better, together.".equals(driver
-				.getTitle())) {
-			throw new IllegalStateException(
-					"This is not the start page, this is " + driver.getTitle());
-		}
+		super(driver);
 	}
 
 	/**
@@ -59,5 +53,15 @@ public class StartPage extends Page {
 	 */
 	public boolean isSearchPresents() {
 		return isElementPresents(search);
+	}
+
+	/**
+	 * Method to get expected page title
+	 *
+	 * @return expected page title
+	 */
+	@Override
+	public CharSequence getExpectedTitle() {
+		return "GitHub · Build software better, together.";
 	}
 }

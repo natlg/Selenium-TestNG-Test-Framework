@@ -45,12 +45,7 @@ public class HomePage extends Page {
 	 *             If it's not expected page
 	 */
 	public HomePage(WebDriver driver) {
-		this.driver = driver;
-		// Check that we're on the right page.
-		if (!"GitHub".equals(driver.getTitle())) {
-			throw new IllegalStateException(
-					"This is not the home page, this is " + driver.getTitle());
-		}
+		super(driver);
 	}
 
 	/**
@@ -85,7 +80,8 @@ public class HomePage extends Page {
 	public boolean isLoginSuccessed() {
 		return isElementPresents(welcomeMessage)
 				&& isElementPresents(userLinks)
-				&& isElementPresents(repositories) && isElementPresents(logoutNewDesign);
+				&& isElementPresents(repositories)
+				&& isElementPresents(logoutNewDesign);
 	}
 
 	/**
@@ -142,6 +138,16 @@ public class HomePage extends Page {
 	public NotificationsPage seeNotifications() {
 		notificationsIcon.click();
 		return PageFactory.initElements(driver, NotificationsPage.class);
+	}
+
+	/**
+	 * Method to get expected page title
+	 *
+	 * @return expected page title
+	 */
+	@Override
+	public String getExpectedTitle() {
+		return "GitHub";
 	}
 
 }

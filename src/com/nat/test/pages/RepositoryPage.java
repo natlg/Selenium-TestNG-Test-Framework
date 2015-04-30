@@ -12,25 +12,30 @@ import com.nat.test.TestData;
  */
 public class RepositoryPage extends RepositoryAbstractPage {
 
+	private String repoName;
+
 	/**
 	 * Class constructor
 	 * 
-	 * @param repoName
-	 *            Repository name
 	 * @param driver
 	 *            The driver that will be used for navigation
 	 * @throws IllegalStateException
 	 *             If it's not expected page
 	 */
-	public RepositoryPage(String repoName, WebDriver driver) {
-		this.driver = driver;
-		// Check that we're on the right page.
-		if (!(TestData.LOGIN + "/" + repoName).equals(driver.getTitle())) {
-			throw new IllegalStateException(
-					"This is not the repository page, this is "
-							+ driver.getTitle());
-		}
-		PageFactory.initElements(driver, this);
+	public RepositoryPage(WebDriver driver) {
+		super(driver);
+	}
+
+	/**
+	 * Method to get expected page title
+	 *
+	 * @return expected page title
+	 */
+	@Override
+	public String getExpectedTitle() {
+		TestData data = TestData.getData();
+		repoName = data.getRepositoryName();
+		return TestData.LOGIN + "/" + repoName;
 	}
 
 }

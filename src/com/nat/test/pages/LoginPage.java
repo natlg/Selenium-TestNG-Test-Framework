@@ -37,12 +37,7 @@ public class LoginPage extends Page {
 	 *             If it's not expected page
 	 */
 	public LoginPage(WebDriver driver) {
-		this.driver = driver;
-		// Check that we're on the right page.
-		if (!"Sign in · GitHub".equals(driver.getTitle())) {
-			throw new IllegalStateException(
-					"This is not the login page, this is " + driver.getTitle());
-		}
+		super(driver);
 	}
 
 	/**
@@ -109,6 +104,16 @@ public class LoginPage extends Page {
 				&& isElementPresents(submit)
 				&& isElementPresents(singInMessage)
 				&& isElementPresents(resetPassword);
+	}
+
+	/**
+	 * Method to get expected page title
+	 *
+	 * @return expected page title
+	 */
+	@Override
+	public String getExpectedTitle() {
+		return "Sign in · GitHub";
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.nat.test.pages;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -34,6 +36,10 @@ public abstract class RepositoryAbstractPage extends Page {
 	protected WebElement settings;
 
 	protected String repName;
+
+	public RepositoryAbstractPage(WebDriver driver) {
+		super(driver);
+	}
 
 	/**
 	 * Check if all sections present on the page
@@ -74,7 +80,7 @@ public abstract class RepositoryAbstractPage extends Page {
 	 * @return repository name
 	 */
 	public String getRepositoryName() {
-		return repName;
+		return repNameElement.getText();
 	}
 
 	/**

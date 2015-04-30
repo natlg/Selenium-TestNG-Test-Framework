@@ -27,13 +27,7 @@ public class NotificationsPage extends Page {
 	 *             If it's not expected page
 	 */
 	public NotificationsPage(WebDriver driver) {
-		this.driver = driver;
-		// Check that we're on the right page.
-		if (!"Notifications".equals(driver.getTitle())) {
-			throw new IllegalStateException(
-					"This is not the Notifications page, this is "
-							+ driver.getTitle());
-		}
+		super(driver);
 	}
 
 	/**
@@ -45,5 +39,15 @@ public class NotificationsPage extends Page {
 	public boolean isNoticicationsPresent() {
 		return isElementPresents(unread) && isElementPresents(participating)
 				&& isElementPresents(allNotifications);
+	}
+
+	/**
+	 * Method to get expected page title
+	 *
+	 * @return expected page title
+	 */
+	@Override
+	public String getExpectedTitle() {
+		return "Notifications";
 	}
 }

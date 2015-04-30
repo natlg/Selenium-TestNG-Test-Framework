@@ -196,4 +196,20 @@ public class PageNavigator {
 		homePage = optionsPage.deleteRepository();
 		return homePage;
 	}
+
+	/**
+	 * Method to delete repository and then logout
+	 *
+	 * @param driver
+	 *            The driver that will be used for navigation
+	 * @param page
+	 *            Page with repository to delete
+	 * @return An instance of {@link HomePage} class
+	 */
+	public StartPage deleteRepositiryAndLogout(WebDriver driver,
+			String repName, RepositoryPage repositoryPage) {
+		optionsPage = repositoryPage.goToSettings();
+		homePage = optionsPage.deleteRepository(repName);
+		return logout(driver, repositoryPage);
+	}
 }

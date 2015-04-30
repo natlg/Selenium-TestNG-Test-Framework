@@ -30,13 +30,7 @@ public class IssuePage extends RepositoryAbstractPage {
 	 *             If it's not expected page
 	 */
 	public IssuePage(WebDriver driver) {
-		this.driver = driver;
-		// Check that we're on the right page.
-		if (!driver.getTitle().contains("Issue")) {
-			throw new IllegalStateException(
-					"This is not the NewIssue page, this is "
-							+ driver.getTitle());
-		}
+		super(driver);
 	}
 
 	public boolean areNewIssueElementsPresent() {
@@ -58,5 +52,15 @@ public class IssuePage extends RepositoryAbstractPage {
 		System.out.println("status " + statusOpen.getText());
 		return isElementPresents(timeJustAdded)
 				&& isElementPresents(statusOpen);
+	}
+
+	/**
+	 * Method to get expected page title
+	 *
+	 * @return expected page title
+	 */
+	@Override
+	public String getExpectedTitle() {
+		return "Issue";
 	}
 }

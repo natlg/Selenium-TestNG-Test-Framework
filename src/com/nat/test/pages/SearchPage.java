@@ -7,6 +7,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import com.nat.test.TestData;
+
 /**
  * Class represents page with search results
  */
@@ -27,12 +29,7 @@ public class SearchPage extends Page {
 	 *             If it's not expected page
 	 */
 	public SearchPage(WebDriver driver) {
-		this.driver = driver;
-		// Check that we're on the right page.
-		if (!driver.getTitle().contains("Search")) {
-			throw new IllegalStateException(
-					"This is not the search page, this is " + driver.getTitle());
-		}
+		super(driver);
 	}
 
 	/**
@@ -53,6 +50,55 @@ public class SearchPage extends Page {
 		return isElementPresents(errorNoResult);
 	}
 
-	
+	/**
+	 * Method to get expected page title
+	 *
+	 * @return expected page title
+	 */
+	@Override
+	public String getExpectedTitle() {
+		return "Search";
+	}
+
+	/**
+	 * Method to check if search results contain search query
+	 * 
+	 * @param searchQuery
+	 *            Search Query
+	 *
+	 * @return True if search results contain search query
+	 */
+	public boolean isResultContains(String searchQuery) {
+		List<WebElement> searchResults = getSearchResults();
+		boolean contains = false;
+		for (WebElement result : searchResults) {
+			if (result.getAttribute("href").toLowerCase().contains(searchQuery)) {
+				contains = true;
+			}
+		}
+		return contains;
+	}
+
+	/**
+	 * Method to check if search results appear correct: if some results found,
+	 * they contain search query or if nothing found, error message appears
+	 * 
+	 * @param hasResult
+	 *            If true, search results must appear, if false, then error
+	 *            message
+	 * @param searchQuery
+	 *            Search Query
+	 *
+	 * @return True if search results appear correct: if some results found,
+	 *         they contain search query or if nothing found, error message
+	 *         appears
+	 */
+	public boolean isResultMatch(boolean hasResult, String searchQuery) {
+		if (hasResult) {
+			return isResultContains(searchQuery);
+		} else {
+			return isErrorNoResultPresents();
+		}
+	}
 
 }

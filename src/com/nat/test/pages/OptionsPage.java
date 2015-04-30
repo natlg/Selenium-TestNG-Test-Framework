@@ -25,13 +25,7 @@ public class OptionsPage extends RepositoryAbstractPage {
 	 *             If it's not expected page
 	 */
 	public OptionsPage(WebDriver driver) {
-		this.driver = driver;
-		//
-		// if (!driver.getTitle().trim().toLowerCase().contains("options")) {
-		// throw new IllegalStateException(
-		// "This is not the options page, this is "
-		// + driver.getTitle());
-		// }
+		super(driver);
 	}
 
 	/**
@@ -59,7 +53,7 @@ public class OptionsPage extends RepositoryAbstractPage {
 		deleteField.submit();
 		return PageFactory.initElements(driver, HomePage.class);
 	}
-	
+
 	/**
 	 * Method to delete current repository
 	 * 
@@ -70,5 +64,16 @@ public class OptionsPage extends RepositoryAbstractPage {
 		deleteField.sendKeys(repNameElement.getText());
 		deleteField.submit();
 		return PageFactory.initElements(driver, HomePage.class);
+	}
+
+	/**
+	 * Method to get expected page title
+	 *
+	 * @return expected page title
+	 */
+	@Override
+	public String getExpectedTitle() {
+		// Here is a bug
+		return null;
 	}
 }

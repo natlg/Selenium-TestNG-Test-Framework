@@ -33,12 +33,7 @@ public class IssuesSectionPage extends RepositoryAbstractPage {
 	 *             If it's not expected page
 	 */
 	public IssuesSectionPage(WebDriver driver) {
-		this.driver = driver;
-		// Check that we're on the right page.
-		if (!driver.getCurrentUrl().contains("issues")) {
-			throw new IllegalStateException(
-					"This is not the Issues page, this is " + driver.getTitle());
-		}
+		super(driver);
 	}
 
 	public boolean areAllElementsPresent() {
@@ -62,5 +57,15 @@ public class IssuesSectionPage extends RepositoryAbstractPage {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Method to get expected page title
+	 *
+	 * @return expected page title
+	 */
+	@Override
+	public String getExpectedTitle() {
+		return "Issues";
 	}
 }

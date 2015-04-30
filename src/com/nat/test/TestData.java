@@ -9,6 +9,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.testng.Assert;
 
+import com.nat.test.pages.StartPage;
 import com.nat.test.utils.ConfigReader;
 import com.nat.test.utils.XLSWorker;
 
@@ -48,6 +49,23 @@ public class TestData {
 	private static final int START_ROW_NUM_ADD_REP_TEST = 10;
 	private static final int START_ROW_NUM_DELETE_REP_TEST = 15;
 	private static final int START_ROW_NUM_ADD_ISSUE = 18;
+	private String repositoryName;
+	private static TestData data;
+
+	private TestData() {
+	}
+
+	/**
+	 * Method to get instance of the class
+	 * 
+	 * @return An instance of the {@link TestData} class
+	 */
+	public static TestData getData() {
+		if (null == data) {
+			data = new TestData();
+		}
+		return data;
+	}
 
 	/**
 	 * Saves test results to the excel file (passed or fail)
@@ -213,4 +231,13 @@ public class TestData {
 		}
 		return driver;
 	}
+
+	public String getRepositoryName() {
+		return repositoryName;
+	}
+
+	public void setRepositoryName(String repositoryName) {
+		this.repositoryName = repositoryName;
+	}
+
 }
